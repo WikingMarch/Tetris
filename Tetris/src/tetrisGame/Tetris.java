@@ -48,7 +48,6 @@ class Tetris extends JPanel {
 	/* 利用java的API将图片读为内存对象 */
 	static {
 		try {
-			// Tetris 与tetris.png在同一个package中
 			background = ImageIO.read(new FileInputStream("image/tetris2.png"));
 			gameOver = ImageIO.read(new FileInputStream("image/game-over.png"));
 			O = ImageIO.read(new FileInputStream("image/O.png"));
@@ -134,7 +133,7 @@ class Tetris extends JPanel {
 		if (canDrop()) {
 			tetromino.softDrop();
 		} else {
-			if(this.tetromino.cells[0].getImage() != this.Bomb) {
+			if(this.tetromino.cells[0].getImage() != Tetris.Bomb) {//如果方块不是炸弹
 				landIntoWall();
 				int lines = destroyLines();
 				line+=lines;
@@ -148,7 +147,8 @@ class Tetris extends JPanel {
 			}else {
 				int row = tetromino.cells[3].getRow();
 				System.out.println(row);
-				if(row <= ROWS-3) {//摧毁炸弹接触以下的2行
+				//摧毁炸弹底部接触所在下面的2行
+				if(row <= ROWS-3) {
 					for(int i=1;i<3;i++) {
 						deleteRow(row+i);
 					}
