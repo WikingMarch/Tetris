@@ -57,7 +57,7 @@ public class Cell {
 	
 	@Override
 	public String toString() {
-		return "Cell [col=" + col + ", image=" + image + ", row=" + row + "]";
+		return " [row=" + row + ", col=" + col + "]";
 	}
 	
 

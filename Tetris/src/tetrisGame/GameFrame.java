@@ -13,7 +13,7 @@ public class GameFrame extends JFrame {
 	public GameFrame() {
 		tetris = new Tetris();
 		this.add(tetris);
-		this.setSize(525, 580);
+		this.setSize(531, 580);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setTitle("俄罗斯方块");
@@ -24,6 +24,7 @@ public class GameFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
 	public static void main(String[] args) {
 		GameFrame gameframe = new GameFrame();
 		gameframe.setVisible(true);

@@ -34,7 +34,8 @@ public abstract class Tetromino {
 	 */
 	public static Tetromino randomOne() {
 		Random rand = new Random();
-		int type = rand.nextInt(8);// type:[0,8)
+//		int type = rand.nextInt(8);
+		int type = 2;
 		switch (type) {
 		case 0:
 			return new T();
@@ -92,6 +93,10 @@ public abstract class Tetromino {
 	public void rotateRigth() {
 		index++;
 		State s = states[index % states.length];
+		System.out.println(s.row0+","+s.col0);
+		System.out.println(s.row1+","+s.col1);
+		System.out.println(s.row2+","+s.col2);
+		System.out.println(s.row3+","+s.col3);
 		Cell o = this.cells[0];
 		int row = o.getRow();
 		int col = o.getCol();
@@ -117,7 +122,7 @@ public abstract class Tetromino {
 		cells[3].setRow(row+s.row3);
 		cells[3].setCol(col+s.col3);
 	}
-
+	
 }
 
 
@@ -128,6 +133,10 @@ class T extends Tetromino {
 		cells[1] = new Cell(0, 3, Tetris.T);
 		cells[2] = new Cell(0, 5, Tetris.T);
 		cells[3] = new Cell(1, 4, Tetris.T);
+/*		cells[0] = new Cell(2, 4, Tetris.T);
+		cells[1] = new Cell(2, 3, Tetris.T);
+		cells[2] = new Cell(2, 5, Tetris.T);
+		cells[3] = new Cell(3, 5, Tetris.T);*/
 		states = new State[4];
 		states[0] = new State(0, 0, 0, -1, 0, 1, 1, 0);// S0
 		states[1] = new State(0, 0, -1, 0, 1, 0, 0, -1);// S1
@@ -222,8 +231,8 @@ class I extends Tetromino {
 class Bomb extends Tetromino{
 	public Bomb() {
 		cells[0] = new Cell(0, 3, Tetris.Bomb);
-		cells[1] = new Cell(0, 6, Tetris.Bomb);
+		cells[1] = new Cell(0, 5, Tetris.Bomb);
 		cells[2] = new Cell(1, 4, Tetris.Bomb);
-		cells[3] = new Cell(1, 5, Tetris.Bomb);
+		cells[3] = new Cell(2, 4, Tetris.Bomb);
 	}
 }

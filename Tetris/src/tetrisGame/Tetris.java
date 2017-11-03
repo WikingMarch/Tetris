@@ -21,7 +21,8 @@ class Tetris extends JPanel {
 	private int score;
 	// 行数
 	private int line;
-	// 级别
+	// 时间
+	private String time = "00:00:00   000";
 	public static final int ROWS = 20;
 	public static final int COLS = 10;
 	// 方块墙
@@ -32,7 +33,8 @@ class Tetris extends JPanel {
 	private Tetromino nextOne;
 	private Object keyListener;
     private Timer timer;// 定时器
-    private int interval = 500; //下落间隔时间500ms
+    private Timer counter;// 计时器
+    private int interval = 600; //下落间隔时间500ms
     
     private int state; //游戏状态
     private int[] scoreTable = {0, 10, 20, 35, 100};
@@ -98,7 +100,8 @@ class Tetris extends JPanel {
 						moveLeftAction();
 						break;
 					case KeyEvent.VK_DOWN:
-						softDropAction();
+//						softDropAction();
+						hardDropAction();
 						break;
 					case KeyEvent.VK_UP:
 						rotateRigthAction();
@@ -125,8 +128,36 @@ class Tetris extends JPanel {
 				repaint();
 			}
 		}, 0,interval);
+		
+		counter = new Timer();
+		counter.schedule(new TimerTask() {
+			long i=0;
+			@Override
+			public void run() {
+				if(state == RUNNING) {
+					time = format(i++);
+				}
+				repaint();
+			}}, 0,1);
 
 	}
+	//时间格式化
+	private String format(long elapsed) {    
+        int hour, minute, second, milli;    
+        //毫秒
+        milli = (int) (elapsed % 1000);    
+        elapsed = elapsed / 1000;    
+        //秒
+        second = (int) (elapsed % 60);    
+        elapsed = elapsed / 60;    
+        //分
+        minute = (int) (elapsed % 60);    
+        elapsed = elapsed / 60;    
+        //小时
+        hour = (int) (elapsed % 60);    
+ 
+        return String.format("%02d:%02d:%02d %03d", hour, minute, second, milli);    
+    }    
 	
 	//慢下落运动
 	public void softDropAction() {
@@ -162,6 +193,13 @@ class Tetris extends JPanel {
 			}
 		}
 	}
+	
+	//直接下落
+	public void hardDropAction() {
+		while(canDrop()) {
+			tetromino.softDrop();
+		}
+	}
 
 	/*
 	 * Tetris类中,利用重写修改JPanel的paint()方法 修改原有的paint()方法 g 引用了绑定到当前面板上的画笔
@@ -180,6 +218,8 @@ class Tetris extends JPanel {
 		paintScore(g);
 		//画游戏状态图
 		paintState(g);
+		//绘制时间
+		paintTime(g);
 
 	}
 	//==================================绘制界面上显示元素START=====================================
@@ -192,12 +232,14 @@ class Tetris extends JPanel {
 		g.setColor(new Color(255, 255, 255));
 		g.drawString("行数:"+line, x, y);
 		y+=56;
-		g.drawString("分数:"+score, x, y);
+		g.setColor(new Color(255, 127, 0));
+		g.drawString("得分:"+score, x, y);
 	}
-	//根据不同的游戏状态绘制不同场景
+	//根据不同的游戏状态绘制不同提示语
 	private void paintState(Graphics g) {
 		int x = 290;
 		int y = 160+56+56;
+		g.setColor(new Color(192, 255, 62));
 		switch(state){
 		case RUNNING:
 			g.drawString("[P]暂停", x, y);	break;
@@ -208,6 +250,17 @@ class Tetris extends JPanel {
 			g.drawImage(gameOver, -15, -15, null);
 		}
 	}
+	
+	//绘制时间
+	private void paintTime(Graphics g) {
+		int x = 290;
+		int y = 160+56+56+56;
+		Font f = new Font(Font.SANS_SERIF,Font.BOLD,23);
+		g.setFont(f);
+		g.setColor(new Color(0, 255, 0));
+		g.drawString("时间:"+time, x, y);
+	}
+		
 	// 画出下一个出场的方块
 	private void paintnextOne(Graphics g) {
 		if(nextOne==null){	
@@ -220,7 +273,7 @@ class Tetris extends JPanel {
 			int row = c.getRow() + 1;
 			int x = col * CELL_SIZE;
 			int y = row * CELL_SIZE;
-			g.drawImage(c.getImage(), x, y, null);
+			g.drawImage(c.getImage(), x, y+2, null);
 
 		}
 	}
